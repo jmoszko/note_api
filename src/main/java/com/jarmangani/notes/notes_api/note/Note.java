@@ -30,7 +30,7 @@ public class Note {
     @OneToOne
     private User author;
 
-    private Time crationTime;
+    private Time creationTime;
     
     private String topic;
 
