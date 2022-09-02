@@ -15,17 +15,19 @@ import org.hibernate.annotations.Type;
 import com.jarmangani.notes.notes_api.tag.Tag;
 import com.jarmangani.notes.notes_api.user.User;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Entity
 @Data
+@Builder
 public class Note {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private int id;
 
     @OneToMany
-    private Set<Tag> tag;
+    private Set<Tag> tags;
 
     @OneToOne
     private User author;

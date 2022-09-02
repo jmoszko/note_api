@@ -1,5 +1,6 @@
 package com.jarmangani.notes.notes_api.user;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,5 +15,6 @@ public class User {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private int id;
 
+    @Column(unique = true)
     private String email;
 }
