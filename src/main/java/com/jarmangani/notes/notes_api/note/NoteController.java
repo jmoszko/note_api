@@ -1,7 +1,12 @@
 package com.jarmangani.notes.notes_api.note;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -19,6 +24,7 @@ import com.jarmangani.notes.notes_api.user.User;
 import com.jarmangani.notes.notes_api.user.UserRepository;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
 class NoteInput {
@@ -28,6 +34,7 @@ class NoteInput {
 }
 
 @Controller
+@Slf4j
 @RequestMapping(path="/notes")
 public class NoteController {
     @Autowired
@@ -38,12 +45,17 @@ public class NoteController {
     private TagRepository tagRepository;
 
     @PostMapping(path="/add")
-    public ResponseEntity<Note> addNote(@RequestBody NoteInput noteInput) {
+    public ResponseEntity addNote(@RequestBody NoteInput noteInput) {
         String userEmail = "jaroslaw.moszkowski@motorolasolutions.com";
         User author = userRepository.findByEmail(userEmail);
-        // addMissingTags(noteInput);
+        List<String> missingTags = findMissingTags(noteInput);
+        if(!missingTags.isEmpty()) {
+            String missingTagsString = missingTags.stream().collect(Collectors.joining(","));
+            log.warn("Unable to create note due to missing tags: " + missingTagsString);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Unknown tags: " + missingTagsString);
+        }
         Note note = Note.builder()
-            // .tags(noteInput.getTags().stream().map(tagName -> new Tag(tagName)).collect(Collectors.toSet()))
+            .tags(noteInput.getTags().stream().map(tagName -> new Tag(tagName)).collect(Collectors.toSet()))
             .author(author)
             .creationTime(new java.sql.Time(System.currentTimeMillis()))
             .topic(noteInput.getTopic())
@@ -53,10 +65,14 @@ public class NoteController {
         return ResponseEntity.status(HttpStatus.CREATED).body(note);
     }
 
-    private void addMissingTags(NoteInput noteInput) {
-        Set<String> existingTagNames = StreamSupport.stream(tagRepository.findAll().spliterator(), false).map(tag -> tag.getTag()).collect(Collectors.toSet());
-        Set<String> missingTagNames = new HashSet<>(noteInput.getTags());
-        missingTagNames.removeAll(existingTagNames);
-        tagRepository.saveAll(missingTagNames.stream().map(tagName -> new Tag(tagName)).collect(Collectors.toList()));
+    private List<String> findMissingTags(NoteInput noteInput) {
+        Map<String, Boolean> tagExistence = new TreeMap<>();
+        for(String tag: noteInput.getTags()) {
+            tagExistence.put(tag, tagRepository.existsByTag(tag));
+        }
+        if(tagExistence.values().stream().filter(v -> !v).findAny().isPresent()) {
+            return tagExistence.entrySet().stream().filter(e -> !e.getValue()).map(e -> e.getKey()).collect(Collectors.toList());
+        }
+        return Collections.emptyList();
     }
 }

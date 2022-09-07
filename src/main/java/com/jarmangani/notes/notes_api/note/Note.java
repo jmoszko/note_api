@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.Type;
@@ -15,18 +15,22 @@ import org.hibernate.annotations.Type;
 import com.jarmangani.notes.notes_api.tag.Tag;
 import com.jarmangani.notes.notes_api.user.User;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Note {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private int id;
 
-    @OneToMany
+    @ManyToMany
     private Set<Tag> tags;
 
     @OneToOne
