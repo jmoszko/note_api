@@ -23,10 +23,12 @@ import com.jarmangani.notes.notes_api.tag.TagRepository;
 import com.jarmangani.notes.notes_api.user.User;
 import com.jarmangani.notes.notes_api.user.UserRepository;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 @Data
+@AllArgsConstructor
 class NoteInput {
     private Set<String> tags;
     private String topic;
