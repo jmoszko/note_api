@@ -1,12 +1,10 @@
 package com.jarmangani.notes.notes_api.note;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -14,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.jarmangani.notes.notes_api.tag.Tag;
 import com.jarmangani.notes.notes_api.tag.TagRepository;
@@ -46,15 +46,21 @@ public class NoteController {
     @Autowired
     private TagRepository tagRepository;
 
+    @GetMapping(path="") 
+    public ResponseEntity<List<Note>> getNotes() {
+        List<Note> notes = StreamSupport.stream(noteRepository.findAll().spliterator(), false).collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(notes);
+    }
+
     @PostMapping(path="/add")
-    public ResponseEntity addNote(@RequestBody NoteInput noteInput) {
+    public ResponseEntity<Note> addNote(@RequestBody NoteInput noteInput) {
         String userEmail = "jaroslaw.moszkowski@motorolasolutions.com";
         User author = userRepository.findByEmail(userEmail);
         List<String> missingTags = findMissingTags(noteInput);
         if(!missingTags.isEmpty()) {
             String missingTagsString = missingTags.stream().collect(Collectors.joining(","));
             log.warn("Unable to create note due to missing tags: " + missingTagsString);
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Unknown tags: " + missingTagsString);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unknown tags: " + missingTagsString);
         }
         Note note = Note.builder()
             .tags(noteInput.getTags().stream().map(tagName -> new Tag(tagName)).collect(Collectors.toSet()))
