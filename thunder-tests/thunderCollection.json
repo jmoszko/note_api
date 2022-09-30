@@ -5,5 +5,12 @@
     "created": "2022-09-28T10:56:24.318Z",
     "sortNum": 10000,
     "folders": []
+  },
+  {
+    "_id": "d8d5833c-5287-44cd-8f8a-5600ea7411ac",
+    "colName": "Root",
+    "created": "2022-09-29T10:00:46.346Z",
+    "sortNum": 20000,
+    "folders": []
   }
 ]

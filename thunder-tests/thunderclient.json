@@ -8,8 +8,13 @@
     "method": "GET",
     "sortNum": 10000,
     "created": "2022-09-28T10:56:37.207Z",
-    "modified": "2022-09-28T11:01:02.366Z",
-    "headers": [],
+    "modified": "2022-09-29T12:30:26.005Z",
+    "headers": [
+      {
+        "name": "Cookie",
+        "value": "JSESSIONID=38C5E4DFF433B6388711346C3E5F40B2"
+      }
+    ],
     "params": [],
     "tests": []
   },
@@ -30,6 +35,20 @@
       "raw": "{\n  \"topic\": \"topic\",\n  \"content\": \"content\",\n  \"tags\": [\"kupa\"]\n}",
       "form": []
     },
+    "tests": []
+  },
+  {
+    "_id": "8e63301b-f3e5-4053-a956-b96cedfae36e",
+    "colId": "d8d5833c-5287-44cd-8f8a-5600ea7411ac",
+    "containerId": "",
+    "name": "getWelcomeMessage",
+    "url": "http://localhost:8080/",
+    "method": "GET",
+    "sortNum": 20000,
+    "created": "2022-09-29T10:01:12.326Z",
+    "modified": "2022-09-29T10:01:29.049Z",
+    "headers": [],
+    "params": [],
     "tests": []
   }
 ]
