@@ -1,4 +1,3 @@
-Dodać autoryzację użytkownika
 Dodać proste testy do notatek
 Dodać filtry do notatek
 Zwracać tylko notatki do których użytkownik ma uprawnienia

@@ -1,6 +1,7 @@
 package com.jarmangani.notes.notes_api;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -11,5 +12,8 @@ public class MvcConfig implements WebMvcConfigurer {
         viewControllerRegistry.addViewController("/").setViewName("home");
         viewControllerRegistry.addViewController("/hello").setViewName("hello");
         viewControllerRegistry.addViewController("/login").setViewName("login");
+    }
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**").allowedMethods("*");
     }
 }
