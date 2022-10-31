@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "_id": "40e453c3-06ce-49b0-a7d7-b141e44523c8",
+    "name": "Notes",
+    "default": true,
+    "sortNum": 10000,
+    "created": "2022-09-30T11:14:46.464Z",
+    "modified": "2022-10-28T13:32:19.179Z",
+    "data": [
+      {
+        "name": "cookie",
+        "value": "JSESSIONID=0B06D6176CBC34B51A9DB2E83F63E6E5"
+      }
+    ]
+  }
+]

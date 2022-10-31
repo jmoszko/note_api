@@ -8,13 +8,8 @@
     "method": "GET",
     "sortNum": 10000,
     "created": "2022-09-28T10:56:37.207Z",
-    "modified": "2022-09-29T12:30:26.005Z",
-    "headers": [
-      {
-        "name": "Cookie",
-        "value": "JSESSIONID=38C5E4DFF433B6388711346C3E5F40B2"
-      }
-    ],
+    "modified": "2022-10-27T14:36:33.576Z",
+    "headers": [],
     "params": [],
     "tests": []
   },
@@ -27,12 +22,12 @@
     "method": "POST",
     "sortNum": 20000,
     "created": "2022-09-28T11:02:50.846Z",
-    "modified": "2022-09-28T13:08:15.624Z",
+    "modified": "2022-10-28T13:15:45.005Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n  \"topic\": \"topic\",\n  \"content\": \"content\",\n  \"tags\": [\"kupa\"]\n}",
+      "raw": "{\n  \"topic\": \"temat\",\n  \"content\": \"zawartość\",\n  \"tags\": [\"kupa\"]\n}",
       "form": []
     },
     "tests": []
@@ -49,6 +44,58 @@
     "modified": "2022-09-29T10:01:29.049Z",
     "headers": [],
     "params": [],
+    "tests": []
+  },
+  {
+    "_id": "216fe10f-9237-4224-899e-7afbad525deb",
+    "colId": "3ed4d10d-b53c-4e54-88fd-c2f39258d1b2",
+    "containerId": "",
+    "name": "create new user",
+    "url": "http://localhost:8080/users/add",
+    "method": "POST",
+    "sortNum": 10000,
+    "created": "2022-09-30T11:05:01.390Z",
+    "modified": "2022-10-27T14:35:08.759Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"email\": \"jaroslaw444@gmail.com\",\n  \"password\": \"jarek2\"\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "b6cb7a36-e31e-4aff-8745-906be4216524",
+    "colId": "72edaf8d-1465-44f3-a71c-500cf9204ad0",
+    "containerId": "",
+    "name": "Get All",
+    "url": "http://localhost:8080/notes",
+    "method": "GET",
+    "sortNum": 30000,
+    "created": "2022-10-28T13:21:21.519Z",
+    "modified": "2022-10-28T13:22:08.973Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "54b03ed2-237d-43f3-ba2c-6d55190e26f8",
+    "colId": "72edaf8d-1465-44f3-a71c-500cf9204ad0",
+    "containerId": "",
+    "name": "Create",
+    "url": "http://localhost:8080/tags/add",
+    "method": "POST",
+    "sortNum": 40000,
+    "created": "2022-10-28T13:22:39.545Z",
+    "modified": "2022-10-28T13:24:49.372Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"tag\": \"kupa\"\n}",
+      "form": []
+    },
     "tests": []
   }
 ]
