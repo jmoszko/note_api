@@ -13,8 +13,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.server.ResponseStatusException;
@@ -30,13 +33,13 @@ public class NoteControllerTest {
     @Mock private UserRepository userRepository;
     @Mock private TagRepository tagRepository;
 
-    private NoteController noteController;
+    @InjectMocks private NoteController noteController;
+
     private final String email = "test.user@notes.pl";
     User user = new User(1, email, "pass");
 
     @BeforeEach
-    void init() {
-        noteController = new NoteController(noteRepository, userRepository, tagRepository);
+    void setUpSecurityContext() {
         SecurityContextHolder.setContext(SecurityContextHolder.createEmptyContext());
         SecurityContextHolder.getContext().setAuthentication(new TestingAuthenticationToken(
                 email, null));
@@ -48,7 +51,7 @@ public class NoteControllerTest {
         when(userRepository.findByEmail(eq(email))).thenReturn(user);
         when(tagRepository.existsByTag(eq("Tag"))).thenReturn(true);
 
-        noteController.addNote(noteInput);
+        ResponseEntity<Note> noteResponse = noteController.addNote(noteInput);
 
         ArgumentCaptor<Note> argumentCaptor = ArgumentCaptor.forClass(Note.class);
         verify(noteRepository).save(argumentCaptor.capture());
@@ -57,6 +60,9 @@ public class NoteControllerTest {
         assertEquals(noteInput.getTopic(), argumentCaptor.getValue().getTopic());
         assertEquals(noteInput.getTags(),
                 argumentCaptor.getValue().getTags().stream().map(t -> t.getTag()).collect(Collectors.toSet()));
+
+        assertEquals(HttpStatus.valueOf(201), noteResponse.getStatusCode());
+        assertEquals(argumentCaptor.getValue(), noteResponse.getBody());
     }
 
     @Test
