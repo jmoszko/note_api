@@ -8,11 +8,11 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,10 +26,13 @@ import com.jarmangani.notes.notes_api.user.UserRepository;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 class NoteInput {
     private Set<String> tags;
     private String topic;
@@ -39,13 +42,12 @@ class NoteInput {
 @Controller
 @Slf4j
 @RequestMapping(path="/notes")
+@RequiredArgsConstructor
 public class NoteController {
-    @Autowired
-    private NoteRepository noteRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private TagRepository tagRepository;
+
+    private final NoteRepository noteRepository;
+    private final UserRepository userRepository;
+    private final TagRepository tagRepository;
 
     @GetMapping(path="") 
     public ResponseEntity<List<Note>> getNotes() {
@@ -55,7 +57,8 @@ public class NoteController {
 
     @PostMapping(path="/add")
     public ResponseEntity<Note> addNote(@RequestBody NoteInput noteInput) {
-        String userEmail = "jaroslaw.moszkowski@motorolasolutions.com";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
         User author = userRepository.findByEmail(userEmail);
         List<String> missingTags = findMissingTags(noteInput);
         if(!missingTags.isEmpty()) {
@@ -84,4 +87,5 @@ public class NoteController {
         }
         return Collections.emptyList();
     }
+
 }
