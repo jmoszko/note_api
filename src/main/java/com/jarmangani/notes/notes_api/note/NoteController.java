@@ -50,16 +50,15 @@ public class NoteController {
     private final TagRepository tagRepository;
 
     @GetMapping(path="") 
-    public ResponseEntity<List<Note>> getNotes() {
-        List<Note> notes = StreamSupport.stream(noteRepository.findAll().spliterator(), false).collect(Collectors.toList());
+    public ResponseEntity<Set<Note>> getNotes() {
+        User author = userRepository.findByEmail(getUserEmail());
+        Set<Note> notes = noteRepository.findByAuthor(author);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(notes);
     }
 
     @PostMapping(path="/add")
     public ResponseEntity<Note> addNote(@RequestBody NoteInput noteInput) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userEmail = authentication.getName();
-        User author = userRepository.findByEmail(userEmail);
+        User author = userRepository.findByEmail(getUserEmail());
         List<String> missingTags = findMissingTags(noteInput);
         if(!missingTags.isEmpty()) {
             String missingTagsString = missingTags.stream().collect(Collectors.joining(","));
@@ -75,6 +74,12 @@ public class NoteController {
             .build();
         noteRepository.save(note);
         return ResponseEntity.status(HttpStatus.CREATED).body(note);
+    }
+
+    private String getUserEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+        return userEmail;
     }
 
     private List<String> findMissingTags(NoteInput noteInput) {

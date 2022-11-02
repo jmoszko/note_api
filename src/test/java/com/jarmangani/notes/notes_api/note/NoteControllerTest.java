@@ -7,6 +7,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.server.ResponseStatusException;
+import java.sql.Time;
 
 import com.jarmangani.notes.notes_api.tag.TagRepository;
 import com.jarmangani.notes.notes_api.user.User;
@@ -46,7 +49,19 @@ public class NoteControllerTest {
     }
 
     @Test
-    void createNote_sucess() {
+    void getAllNotesForUser_success() {
+        Note note = Note.builder().author(user).content("Content").creationTime(new Time(166738623)).id(1)
+                .tags(new HashSet<>()).topic("Topic").build();
+        when(noteRepository.findByAuthor(eq(user))).thenReturn(Collections.singleton(note));
+        when(userRepository.findByEmail(eq(email))).thenReturn(user);
+
+        ResponseEntity<Set<Note>> notesResponse = noteController.getNotes();
+        
+        assertEquals(note, notesResponse.getBody().iterator().next());
+    }
+
+    @Test
+    void createNote_success() {
         NoteInput noteInput = new NoteInput(Collections.singleton("Tag"), "Topic", "Content");
         when(userRepository.findByEmail(eq(email))).thenReturn(user);
         when(tagRepository.existsByTag(eq("Tag"))).thenReturn(true);
