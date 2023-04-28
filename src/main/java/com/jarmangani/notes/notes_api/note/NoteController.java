@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +48,7 @@ public class NoteController {
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
 
-    @GetMapping(path="") 
+    @GetMapping(path="")
     public ResponseEntity<Set<Note>> getNotes() {
         User author = userRepository.findByEmail(getUserEmail());
         Set<Note> notes = noteRepository.findByAuthor(author);
