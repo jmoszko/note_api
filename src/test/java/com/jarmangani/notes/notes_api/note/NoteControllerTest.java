@@ -1,6 +1,7 @@
 package com.jarmangani.notes.notes_api.note;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -56,8 +57,9 @@ public class NoteControllerTest {
         when(userRepository.findByEmail(eq(email))).thenReturn(user);
 
         ResponseEntity<Set<Note>> notesResponse = noteController.getNotes();
-        
-        assertEquals(note, notesResponse.getBody().iterator().next());
+        var body = notesResponse.getBody();
+        assertNotNull(body);
+        assertEquals(note, body.iterator().next());
     }
 
     @Test
